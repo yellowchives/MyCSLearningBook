@@ -1,5 +1,19 @@
 ## 入门
 
+### bit
+
+8 bit = 1 byte;
+
+32 bit = 4 bytes = 1 word;
+
+一个 8 进制数字等于 2 进制的 3 bit，一个 16 进制的数字等于 2 进制的 4 bit，所以常用两个 16 进制数字表示一个 byte。
+
+32 为机器的每个地址都用 32 bit，也就是 1 word 来表示，前后两个地址相差的单位是 byte
+
+![](C语言.assets/Snipaste_2022-02-28_23-32-44.jpg)
+
+![](../../Program Files/Typora/Java/image/Snipaste_2022-02-28_23-37-06.jpg)
+
 ### hello world
 
 ```c
