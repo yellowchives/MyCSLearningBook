@@ -208,6 +208,8 @@ int main() {
 }
 ```
 
+在linux的终端输入 `man 3 printf`可以查看库函数printf的签名是 `printf(const char* format...)`。
+
 ### scanf()
 
 scanf 很容易出错，比如
@@ -736,7 +738,7 @@ printf("%d\n", sizeof(a)/sizeof(a[0])); //还是10，虽然n变为20
 
 ### sizeof
 
-C语言不能用 array.length 得到数组长度，需要使用sizeof()函数。此函数可以获取入参占用的内存大小。注意sizeof是一个运算符，编译器本身就能确定它的值，`sizeof num` 和 `sizeof(num)` 都可以，加括号只是为了清晰。
+C语言不能用 array.length 得到数组长度，需要使用sizeof()。此操作符可以获取入参占用的内存大小。注意sizeof是一个运算符，因为它是在编译期间被替换成具体的数字的，而函数只有在运行时才能确定结果。`sizeof num` 和 `sizeof(num)` 都可以，加括号只是为了清晰。
 
 ```c
 int data[4];
@@ -1318,7 +1320,7 @@ int strcmp(const char* str1, const char* str2); //比较字符串大小,返回�
 
 ### 动态内存分配 malloc()
 
-
+`void * malloc(size_t size);`
 
 ### 枚举enum
 
