@@ -28,6 +28,10 @@ MySQL安装目录的bin目录下存放了许多可执行文件，其中一些是
 * 命令管道或共享内存
 * UNIX域套接字
 
+### 登录参数
+
+`mysql –h hostname|hostIP –P port –u username –p DatabaseName –e "SQL语句"  `
+
 ## 启动
 
 启动选项可以调整服务器启动后的一些行为。它们可以在命令行中指定，也可以将它们写入配置文件。
@@ -69,6 +73,9 @@ MySQL有4个级别的字符集和比较规则：
 * 客户端在收到响应字节序列后，是如何解析的。取决于操作系统当前使用的字符集，对于windows来说还与启动选项`default_character_set`有关
 
 ![](MySQL高级.assets/Snipaste_2022-07-25_20-27-36.png)
+
+windows下的mysql语句都是大小写不敏感的，linux要区分大小写。
+`select @@lower_case_table_names;`可以看到windows返回1，linux返回0。
 
 ## 系统变量和会话变量
 
@@ -214,7 +221,6 @@ R(Y)
    	R(A)
    ```
 
-   
 
 ### 隔离级别
 
@@ -232,6 +238,8 @@ R(Y)
 | 读已提交 |      | √          | √    |
 | 可重复读 |      |            | √    |
 | 串行化   |      |            |      |
+
+以上所有隔离级别都不允许脏写，即如果一个数据项已经被另外一个尚未提交或中止的事务写过，则不允许对该数据项再执行写操作。
 
 ```
 查看系统隔离级别：select @@global.tx_isolation;
@@ -262,6 +270,20 @@ transaction-isolation = READ-UNCOMMITTED
 transaction-isolation = SERIALIZABLE
 ```
 
+### 隔离性级别的实现
+
+#### 锁
+
+#### 时间戳
+
+一种实现隔离性的方式是为每个事务分配一个时间戳，通常是在事务开始的时候。
+
+#### 多版本快照隔离
+
+快照隔离（snapshot isolation) 中，我们可以想象在每个事务开始时拥有一份数据库的快照。它从这个私有版本中读取数据，因此和其它事务所做的更新隔离开来。如果事务更新数据的话，该更新只出现在其私有版本中。如果事务提交，则和这些更新有关的信息被保存，更新应用到真正的数据库。
+
+快照隔离带问题是它提供了“太多”的隔离。在快照隔离的情况下，存在任何事务都不能看到对方更新的情况。这种情况在可串行化执行中是不会出现的。
+
 ### 如何使用事务
 
 可以使用显式事务和隐式事务。
@@ -280,3 +302,6 @@ transaction-isolation = SERIALIZABLE
 MySQL有一个系统变量 autocommit：`show variables like 'autocommit'`。默认自动提交。
 
 `set autocommit = off`或者`set autocommmit = 0`这样就可以关闭自动提交。
+
+### 并发控制
+
