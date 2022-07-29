@@ -93,15 +93,16 @@ InnoDB将数据存储到磁盘上，处理数据时需要将数据读取到内�
 
 ### 行格式
 
-表中的每一行在磁盘中保存的物理结构叫做行格式。InnoDB支持4种行格式：`COMPACT、REDUNDANT、DYNAMIC、COMPRESSED`。
+表中的每一行在磁盘中保存的物理结构叫做行格式。InnoDB 支持4种行格式：`COMPACT、REDUNDANT、DYNAMIC、COMPRESSED`。
 
 ```sql
-create table record_format_demo (
-     c1 varchar(10) not null, 
-     c2 char(10) not null
-     ) row_format=COMPACT;
-     
-alter table tb_name row_format=compact;
+create table record_format
+(
+    c1 varchar(10),
+    c2 varchar(10) not null,
+    c3 char(10),
+    c4 varchar(10)
+)charset = ascii row_format = compact;
 ```
 
 1. COMPACT：
@@ -149,7 +150,7 @@ T1 和 T2 两个事务都对一个数据进行修改，T1 先修改，T2 随后�
 
 <img src="MySQL高级.assets/88ff46b3-028a-4dbb-a572-1f062b8b96d3-16589130751082.png" style="zoom:75%;" />
 
-2. 读脏数据
+2. 读脏数据（脏读）
 
 T1 修改一个数据，T2 随后读取这个数据。如果 T1 撤销了这次修改，那么 T2 读取的数据是脏数据。
 
@@ -161,7 +162,7 @@ T2 读取一个数据，T1 对该数据做了修改。如果 T2 再次读取这�
 
 <img src="MySQL高级.assets/c8d18ca9-0b09-441a-9a0c-fb063630d708-16589131270026.png" style="zoom:75%;" />
 
-4. 幻读
+4. 幻读（错误求和）
 
 T1 读取某个范围的数据，T2 在这个范围内插入新的数据，T1 再次读取这个范围的数据，此时读取的结果和和第一次读取的结果不同。
 
@@ -203,7 +204,7 @@ R(Y)
 
 1. 串行调度（Serial Schedule）：一个事务执行完成后才开始另一个事务。
 
-2. 严格调度（Strict Schedule）：如果事务的写入操作先于另一个事务的冲突操作（读取或写入），则此类事务的提交或中止操作也应该在其他事务的冲突操作之前。可以证明，严格调度的最终结果等价于串行调度。
+2. 严格调度（Strict Schedule）：直到最后一个写数据项X的事务提交之前，其他事务都不能读或写X。可以证明，严格调度的最终结果等价于串行调度。
    ```
    T1	T2
    --- ---
